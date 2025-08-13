@@ -3,8 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Variables y Estado ---
     const carrusel = document.getElementById('carrusel');
     const items = document.querySelectorAll('.carrusel .item');
-    let carruselIndex = 0;
-    const itemsPorVista = 3;
 
     // --- Elementos del DOM ---
     const navToggle = document.getElementById('nav-toggle');
@@ -26,19 +24,17 @@ document.addEventListener('DOMContentLoaded', () => {
     let reportesPendientes = JSON.parse(localStorage.getItem('reportesPendientes')) || [];
     let reportesAprobados = JSON.parse(localStorage.getItem('reportesAprobados')) || [];
     let solicitudesAdopcion = JSON.parse(localStorage.getItem('solicitudesAdopcion')) || [];
-    let adopcionesFinalizadas = JSON.parse(localStorage.getItem('adopcionesFinalizadas')) || [];
-    
+
     // --- Funciones auxiliares ---
     function guardarDatos() {
         localStorage.setItem('reportesPendientes', JSON.stringify(reportesPendientes));
         localStorage.setItem('reportesAprobados', JSON.stringify(reportesAprobados));
         localStorage.setItem('solicitudesAdopcion', JSON.stringify(solicitudesAdopcion));
-        localStorage.setItem('adopcionesFinalizadas', JSON.stringify(adopcionesFinalizadas));
     }
 
     function mostrarMensaje(mensaje, tipo = 'exito') {
         mensajeFlotante.textContent = mensaje;
-        mensajeFlotante.className = ''; // Limpiar clases
+        mensajeFlotante.className = '';
         mensajeFlotante.classList.add(tipo);
         mensajeFlotante.style.display = 'block';
         setTimeout(() => {
@@ -48,22 +44,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // --- Lógica del Carrusel ---
     window.moverCarrusel = (direccion) => {
-        if (carrusel.scrollWidth <= carrusel.clientWidth) {
-            return;
-        }
-
-        const totalWidth = carrusel.scrollWidth;
-        const visibleWidth = carrusel.clientWidth;
-        const scrollAmount = visibleWidth / itemsPorVista;
-
-        carrusel.scrollLeft += direccion * scrollAmount;
-
-        // Bucle infinito, solo si el carrusel es visible
-        if (carrusel.scrollLeft + visibleWidth >= totalWidth && direccion > 0) {
-            carrusel.scrollLeft = 0;
-        } else if (carrusel.scrollLeft <= 0 && direccion < 0) {
-            carrusel.scrollLeft = totalWidth - visibleWidth;
-        }
+        const itemWidth = items.length > 0 ? items[0].offsetWidth + 20 : 0;
+        carrusel.scrollBy({
+            left: direccion * itemWidth,
+            behavior: 'smooth'
+        });
     };
 
     // --- Lógica de la Navegación (menú hamburguesa) ---
@@ -87,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ubicacion: formData.get('ubicacion'),
                     descripcion: formData.get('descripcion'),
                     email: formData.get('email'),
-                    foto: e.target.result // Base64 de la imagen
+                    foto: e.target.result
                 };
                 reportesPendientes.push(animal);
                 guardarDatos();
@@ -107,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (contrasena === "7agosto") {
             adminContainer.classList.toggle('solicitudes-visible');
             renderizarAdminPanels();
-            document.querySelector('.tab-btn.active').click(); // Clic en el tab activo para mostrar la primera sección
+            document.querySelector('.tab-btn.active').click();
         } else if (contrasena) {
             alert("Contraseña incorrecta.");
         }
@@ -205,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
             listaAprobados.appendChild(card);
         });
     }
-    
+
     // --- Funciones de administración (accesibles globalmente) ---
     window.aprobarReporte = (id) => {
         const index = reportesPendientes.findIndex(animal => animal.id === id);
@@ -231,10 +216,8 @@ document.addEventListener('DOMContentLoaded', () => {
     window.aceptarAdopcion = (id) => {
         const solicitudIndex = solicitudesAdopcion.findIndex(s => s.id === id);
         if (solicitudIndex > -1) {
-            const solicitud = solicitudesAdopcion[solicitudIndex];
+            const solicitud = solicitudesAdopcion.splice(solicitudIndex, 1)[0];
             reportesAprobados = reportesAprobados.filter(animal => animal.id !== solicitud.animalId);
-            solicitudesAdopcion.splice(solicitudIndex, 1);
-            adopcionesFinalizadas.push(solicitud);
             guardarDatos();
             mostrarMensaje('¡Adopción aceptada! El animal ha sido retirado de la galería.', 'exito');
             renderizarAdminPanels();
@@ -255,7 +238,13 @@ document.addEventListener('DOMContentLoaded', () => {
     window.filtrarAnimales = (tipo) => {
         const animalesFiltrados = tipo === 'todos' ? reportesAprobados : reportesAprobados.filter(animal => animal.tipo === tipo);
         document.querySelectorAll('.filtro-adopcion button').forEach(btn => btn.classList.remove('active'));
-        document.querySelector(`.filtro-adopcion button[onclick="filtrarAnimales('${tipo}')"]`).classList.add('active');
+        if (tipo === 'todos') {
+            document.querySelector(`.filtro-adopcion button[onclick="filtrarAnimales('todos')"]`).classList.add('active');
+        } else if (tipo === 'perro') {
+            document.querySelector(`.filtro-adopcion button[onclick="filtrarAnimales('perro')"]`).classList.add('active');
+        } else if (tipo === 'gato') {
+            document.querySelector(`.filtro-adopcion button[onclick="filtrarAnimales('gato')"]`).classList.add('active');
+        }
         renderizarGaleria(animalesFiltrados);
     };
 
