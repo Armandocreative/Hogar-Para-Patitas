@@ -1,118 +1,150 @@
- document.addEventListener('DOMContentLoaded', () => {
-    // Inicialización del carrusel y AOS
-    let carruselIndex = 0;
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- Variables y Estado ---
     const carrusel = document.getElementById('carrusel');
     const items = document.querySelectorAll('.carrusel .item');
-    const totalItems = items.length;
+    let carruselIndex = 0;
+    const itemsPorVista = 3;
 
-    window.moverCarrusel = (direccion) => {
-        carruselIndex = (carruselIndex + direccion + totalItems) % totalItems;
-        const offset = -carruselIndex * (items[0].offsetWidth + 15);
-        carrusel.style.transform = `translateX(${offset}px)`;
-    };
-
-    // Menú de hamburguesa para móviles
+    // --- Elementos del DOM ---
     const navToggle = document.getElementById('nav-toggle');
     const navMenu = document.getElementById('nav-menu');
-    navToggle.addEventListener('click', () => {
-        navMenu.classList.toggle('active');
-    });
-
-    // Funcionalidad del formulario de reporte
     const formAnimal = document.getElementById('formAnimal');
     const mensajeFlotante = document.getElementById('mensaje-flotante');
+    const listaPublica = document.getElementById('lista-publica');
+    const listaSolicitudes = document.getElementById('lista-solicitudes');
+    const listaAdopciones = document.getElementById('lista-adopciones');
+    const listaAprobados = document.getElementById('lista-aprobados');
+    const adminContainer = document.getElementById('admin-container');
+    const formSolicitud = document.getElementById('formSolicitud');
+    const modalAdopcion = document.getElementById('modal-adopcion');
+    const cerrarModalBtn = document.getElementById('cerrar-modal');
+    const animalIdInput = document.getElementById('animalId');
+    const nombreAnimalModal = document.getElementById('nombre-animal-modal');
 
-    formAnimal.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const formData = new FormData(formAnimal);
-        const animal = Object.fromEntries(formData.entries());
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            // Asignar un ID único a cada animal
-            animal.id = Date.now().toString(36) + Math.random().toString(36).substr(2);
-            animal.foto = e.target.result;
-            guardarReportePendiente(animal);
-            formAnimal.reset(); // Reinicia el formulario después de enviar
-            mostrarMensaje('¡Reporte enviado con éxito! Esperando aprobación.');
-        };
-        reader.readAsDataURL(formData.get('foto'));
-    });
+    // --- Almacenamiento de Datos (LocalStorage) ---
+    let reportesPendientes = JSON.parse(localStorage.getItem('reportesPendientes')) || [];
+    let reportesAprobados = JSON.parse(localStorage.getItem('reportesAprobados')) || [];
+    let solicitudesAdopcion = JSON.parse(localStorage.getItem('solicitudesAdopcion')) || [];
+    let adopcionesFinalizadas = JSON.parse(localStorage.getItem('adopcionesFinalizadas')) || [];
+    
+    // --- Funciones auxiliares ---
+    function guardarDatos() {
+        localStorage.setItem('reportesPendientes', JSON.stringify(reportesPendientes));
+        localStorage.setItem('reportesAprobados', JSON.stringify(reportesAprobados));
+        localStorage.setItem('solicitudesAdopcion', JSON.stringify(solicitudesAdopcion));
+        localStorage.setItem('adopcionesFinalizadas', JSON.stringify(adopcionesFinalizadas));
+    }
 
     function mostrarMensaje(mensaje, tipo = 'exito') {
         mensajeFlotante.textContent = mensaje;
-        mensajeFlotante.style.backgroundColor = tipo === 'exito' ? '#4CAF50' : '#f44336';
+        mensajeFlotante.className = ''; // Limpiar clases
+        mensajeFlotante.classList.add(tipo);
         mensajeFlotante.style.display = 'block';
         setTimeout(() => {
             mensajeFlotante.style.display = 'none';
         }, 3000);
     }
-
-    // Funcionalidad de reportes y solicitudes de adopción
-    let reportesPendientes = JSON.parse(localStorage.getItem('reportesPendientes')) || [];
-    let reportesAprobados = JSON.parse(localStorage.getItem('reportesAprobados')) || [];
-    let solicitudesAdopcion = JSON.parse(localStorage.getItem('solicitudesAdopcion')) || [];
-
-    const listaPublica = document.getElementById('lista-publica');
-    const listaReportesPendientes = document.getElementById('lista-solicitudes');
-    const listaAdopciones = document.getElementById('lista-adopciones');
-    const listaReportesAprobados = document.getElementById('lista-aprobados');
     
-    const listaReportesPendientesContainer = document.getElementById('lista-reportes-container');
-    const listaAdopcionesContainer = document.getElementById('lista-adopciones-container');
-    const listaReportesAprobadosContainer = document.getElementById('lista-aprobados-container');
+    // --- Lógica del Carrusel ---
+    window.moverCarrusel = (direccion) => {
+        if (carrusel.scrollWidth <= carrusel.clientWidth) {
+            return;
+        }
 
+        const totalWidth = carrusel.scrollWidth;
+        const visibleWidth = carrusel.clientWidth;
+        const scrollAmount = visibleWidth / itemsPorVista;
 
-    function guardarReportePendiente(animal) {
-        reportesPendientes.push(animal);
-        localStorage.setItem('reportesPendientes', JSON.stringify(reportesPendientes));
-        verReportesPendientes();
-    }
-    
-    // Funciones del panel de administración
+        carrusel.scrollLeft += direccion * scrollAmount;
+
+        // Bucle infinito, solo si el carrusel es visible
+        if (carrusel.scrollLeft + visibleWidth >= totalWidth && direccion > 0) {
+            carrusel.scrollLeft = 0;
+        } else if (carrusel.scrollLeft <= 0 && direccion < 0) {
+            carrusel.scrollLeft = totalWidth - visibleWidth;
+        }
+    };
+
+    // --- Lógica de la Navegación (menú hamburguesa) ---
+    navToggle.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+    });
+
+    // --- Lógica del Formulario de Reporte ---
+    formAnimal.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const formData = new FormData(formAnimal);
+        const file = formData.get('foto');
+
+        if (file && file.size > 0) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const animal = {
+                    id: Date.now().toString(36) + Math.random().toString(36).substr(2),
+                    nombre: formData.get('nombre'),
+                    tipo: formData.get('tipo'),
+                    ubicacion: formData.get('ubicacion'),
+                    descripcion: formData.get('descripcion'),
+                    email: formData.get('email'),
+                    foto: e.target.result // Base64 de la imagen
+                };
+                reportesPendientes.push(animal);
+                guardarDatos();
+                formAnimal.reset();
+                mostrarMensaje('¡Reporte enviado con éxito! Esperando aprobación.');
+                renderizarAdminPanels();
+            };
+            reader.readAsDataURL(file);
+        } else {
+            mostrarMensaje('Por favor, selecciona una foto.', 'error');
+        }
+    });
+
+    // --- Lógica del Panel de Administración ---
     window.toggleAdminPanelConContrasena = () => {
         const contrasena = prompt("Por favor, introduce la contraseña para acceder al panel:");
-        if (contrasena === "7agosto") { 
-            const panel = document.getElementById('admin-container');
-            panel.classList.toggle('solicitudes-ocultas');
-            panel.classList.toggle('solicitudes-visible');
-            verReportesPendientes();
-            verSolicitudesAdopcion();
-            verReportesAprobados();
+        if (contrasena === "7agosto") {
+            adminContainer.classList.toggle('solicitudes-visible');
+            renderizarAdminPanels();
+            document.querySelector('.tab-btn.active').click(); // Clic en el tab activo para mostrar la primera sección
         } else if (contrasena) {
             alert("Contraseña incorrecta.");
         }
     };
 
     window.mostrarAdminSeccion = (seccion) => {
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-botones .tab-btn').forEach(btn => btn.classList.remove('active'));
         document.querySelector(`.tab-btn[onclick="mostrarAdminSeccion('${seccion}')"]`).classList.add('active');
 
-        listaReportesPendientesContainer.classList.add('oculto');
-        listaAdopcionesContainer.classList.add('oculto');
-        listaReportesAprobadosContainer.classList.add('oculto');
+        document.getElementById('lista-reportes-container').classList.add('oculto');
+        document.getElementById('lista-adopciones-container').classList.add('oculto');
+        document.getElementById('lista-aprobados-container').classList.add('oculto');
 
         if (seccion === 'reportes') {
-            listaReportesPendientesContainer.classList.remove('oculto');
-            verReportesPendientes();
+            document.getElementById('lista-reportes-container').classList.remove('oculto');
         } else if (seccion === 'adopciones') {
-            listaAdopcionesContainer.classList.remove('oculto');
-            verSolicitudesAdopcion();
+            document.getElementById('lista-adopciones-container').classList.remove('oculto');
         } else if (seccion === 'aprobados') {
-            listaReportesAprobadosContainer.classList.remove('oculto');
-            verReportesAprobados();
+            document.getElementById('lista-aprobados-container').classList.remove('oculto');
         }
     };
-    
-    function verReportesPendientes() {
-        listaReportesPendientes.innerHTML = '';
+
+    function renderizarAdminPanels() {
+        renderizarReportesPendientes();
+        renderizarSolicitudesAdopcion();
+        renderizarReportesAprobados();
+    }
+
+    function renderizarReportesPendientes() {
+        listaSolicitudes.innerHTML = '';
         if (reportesPendientes.length === 0) {
-            listaReportesPendientes.innerHTML = '<p>No hay reportes de animales pendientes.</p>';
+            listaSolicitudes.innerHTML = '<p>No hay reportes de animales pendientes.</p>';
             return;
         }
         reportesPendientes.forEach(animal => {
             const card = document.createElement('div');
-            card.className = 'solicitud-card';
+            card.classList.add('solicitud-card');
             card.innerHTML = `
                 <h4>Reporte de ${animal.nombre} (${animal.tipo})</h4>
                 <img src="${animal.foto}" alt="${animal.nombre}" style="width:100%; max-height:200px; object-fit:cover; border-radius:8px;">
@@ -124,42 +156,21 @@
                     <button class="btn-eliminar" onclick="eliminarReportePendiente('${animal.id}')">Eliminar</button>
                 </div>
             `;
-            listaReportesPendientes.appendChild(card);
+            listaSolicitudes.appendChild(card);
         });
     }
 
-    function verReportesAprobados() {
-        listaReportesAprobados.innerHTML = '';
-        if (reportesAprobados.length === 0) {
-            listaReportesAprobados.innerHTML = '<p>No hay reportes aprobados.</p>';
-            return;
-        }
-        reportesAprobados.forEach((animal) => {
-            const card = document.createElement('div');
-            card.className = 'solicitud-card';
-            card.innerHTML = `
-                <h4>Reporte de ${animal.nombre} (${animal.tipo})</h4>
-                <img src="${animal.foto}" alt="${animal.nombre}" style="width:100%; max-height:200px; object-fit:cover; border-radius:8px;">
-                <p><span>Ubicación:</span> ${animal.ubicacion}</p>
-                <p><span>Descripción:</span> ${animal.descripcion}</p>
-                <p><span>Reportado por:</span> ${animal.email}</p>
-            `;
-            listaReportesAprobados.appendChild(card);
-        });
-    }
-
-    function verSolicitudesAdopcion() {
+    function renderizarSolicitudesAdopcion() {
         listaAdopciones.innerHTML = '';
         if (solicitudesAdopcion.length === 0) {
             listaAdopciones.innerHTML = '<p>No hay solicitudes de adopción pendientes.</p>';
             return;
         }
-        solicitudesAdopcion.forEach((solicitud) => {
+        solicitudesAdopcion.forEach(solicitud => {
             const animal = reportesAprobados.find(a => a.id === solicitud.animalId);
-            if (!animal) return; // Si el animal ya no existe (fue adoptado), no mostrar la solicitud
-            
+            if (!animal) return;
             const card = document.createElement('div');
-            card.className = 'solicitud-card';
+            card.classList.add('solicitud-card');
             card.innerHTML = `
                 <h4>Solicitud para adoptar a ${animal.nombre}</h4>
                 <img src="${animal.foto}" alt="${animal.nombre}" style="width:100%; max-height:200px; object-fit:cover; border-radius:8px;">
@@ -175,24 +186,45 @@
         });
     }
 
+    function renderizarReportesAprobados() {
+        listaAprobados.innerHTML = '';
+        if (reportesAprobados.length === 0) {
+            listaAprobados.innerHTML = '<p>No hay reportes aprobados.</p>';
+            return;
+        }
+        reportesAprobados.forEach(animal => {
+            const card = document.createElement('div');
+            card.classList.add('solicitud-card');
+            card.innerHTML = `
+                <h4>Reporte de ${animal.nombre} (${animal.tipo})</h4>
+                <img src="${animal.foto}" alt="${animal.nombre}" style="width:100%; max-height:200px; object-fit:cover; border-radius:8px;">
+                <p><span>Ubicación:</span> ${animal.ubicacion}</p>
+                <p><span>Descripción:</span> ${animal.descripcion}</p>
+                <p><span>Reportado por:</span> ${animal.email}</p>
+            `;
+            listaAprobados.appendChild(card);
+        });
+    }
+    
+    // --- Funciones de administración (accesibles globalmente) ---
     window.aprobarReporte = (id) => {
         const index = reportesPendientes.findIndex(animal => animal.id === id);
         if (index > -1) {
             const animal = reportesPendientes.splice(index, 1)[0];
             reportesAprobados.push(animal);
-            localStorage.setItem('reportesPendientes', JSON.stringify(reportesPendientes));
-            localStorage.setItem('reportesAprobados', JSON.stringify(reportesAprobados));
-            verReportesPendientes();
+            guardarDatos();
+            mostrarMensaje('Reporte aprobado y añadido a la galería.', 'exito');
+            renderizarAdminPanels();
             renderizarGaleria();
         }
     };
 
     window.eliminarReportePendiente = (id) => {
-        if(confirm("¿Estás seguro de que quieres eliminar este reporte? Esta acción no se puede deshacer.")) {
+        if(confirm("¿Estás seguro de que quieres eliminar este reporte?")) {
             reportesPendientes = reportesPendientes.filter(animal => animal.id !== id);
-            localStorage.setItem('reportesPendientes', JSON.stringify(reportesPendientes));
-            verReportesPendientes();
+            guardarDatos();
             mostrarMensaje('Reporte eliminado.', 'error');
+            renderizarAdminPanels();
         }
     };
 
@@ -202,26 +234,28 @@
             const solicitud = solicitudesAdopcion[solicitudIndex];
             reportesAprobados = reportesAprobados.filter(animal => animal.id !== solicitud.animalId);
             solicitudesAdopcion.splice(solicitudIndex, 1);
-            localStorage.setItem('solicitudesAdopcion', JSON.stringify(solicitudesAdopcion));
-            localStorage.setItem('reportesAprobados', JSON.stringify(reportesAprobados));
-            verSolicitudesAdopcion();
-            renderizarGaleria();
+            adopcionesFinalizadas.push(solicitud);
+            guardarDatos();
             mostrarMensaje('¡Adopción aceptada! El animal ha sido retirado de la galería.', 'exito');
+            renderizarAdminPanels();
+            renderizarGaleria();
         }
     };
 
     window.rechazarAdopcion = (id) => {
         if(confirm("¿Estás seguro de que quieres rechazar esta solicitud de adopción?")) {
             solicitudesAdopcion = solicitudesAdopcion.filter(solicitud => solicitud.id !== id);
-            localStorage.setItem('solicitudesAdopcion', JSON.stringify(solicitudesAdopcion));
-            verSolicitudesAdopcion();
+            guardarDatos();
             mostrarMensaje('Solicitud de adopción rechazada.', 'error');
+            renderizarAdminPanels();
         }
     };
 
-    // Funcionalidad de la galería pública
+    // --- Lógica de la Galería Pública ---
     window.filtrarAnimales = (tipo) => {
         const animalesFiltrados = tipo === 'todos' ? reportesAprobados : reportesAprobados.filter(animal => animal.tipo === tipo);
+        document.querySelectorAll('.filtro-adopcion button').forEach(btn => btn.classList.remove('active'));
+        document.querySelector(`.filtro-adopcion button[onclick="filtrarAnimales('${tipo}')"]`).classList.add('active');
         renderizarGaleria(animalesFiltrados);
     };
 
@@ -231,9 +265,9 @@
             listaPublica.innerHTML = '<p>No hay animalitos en adopción en este momento.</p>';
             return;
         }
-        animales.forEach((animal) => {
+        animales.forEach(animal => {
             const card = document.createElement('div');
-            card.className = 'animal-card';
+            card.classList.add('animal-card');
             card.setAttribute('data-tipo', animal.tipo);
             card.innerHTML = `
                 <img src="${animal.foto}" alt="${animal.nombre}" />
@@ -245,27 +279,21 @@
         });
     }
 
-    // Funcionalidad del modal de adopción
-    const modal = document.getElementById('modal-adopcion');
-    const cerrarModal = document.getElementById('cerrar-modal');
-    const formSolicitud = document.getElementById('formSolicitud');
-    const animalIdInput = document.getElementById('animalId');
-    const nombreAnimalModal = document.getElementById('nombre-animal-modal');
-
+    // --- Lógica del Modal de Adopción ---
     window.abrirModal = (id, nombre) => {
         animalIdInput.value = id;
         nombreAnimalModal.textContent = nombre;
-        modal.style.display = 'flex';
+        modalAdopcion.style.display = 'flex';
     };
 
-    cerrarModal.onclick = () => {
-        modal.style.display = 'none';
+    cerrarModalBtn.onclick = () => {
+        modalAdopcion.style.display = 'none';
         formSolicitud.reset();
     };
 
     window.onclick = (e) => {
-        if (e.target === modal) {
-            modal.style.display = 'none';
+        if (e.target === modalAdopcion) {
+            modalAdopcion.style.display = 'none';
             formSolicitud.reset();
         }
     };
@@ -273,17 +301,21 @@
     formSolicitud.addEventListener('submit', (e) => {
         e.preventDefault();
         const formData = new FormData(formSolicitud);
-        const solicitud = Object.fromEntries(formData.entries());
-        solicitud.id = Date.now().toString(36) + Math.random().toString(36).substr(2);
-        
+        const solicitud = {
+            id: Date.now().toString(36) + Math.random().toString(36).substr(2),
+            animalId: formData.get('animalId'),
+            nombreSolicitante: formData.get('nombreSolicitante'),
+            emailSolicitante: formData.get('emailSolicitante'),
+            telefonoSolicitante: formData.get('telefonoSolicitante')
+        };
         solicitudesAdopcion.push(solicitud);
-        localStorage.setItem('solicitudesAdopcion', JSON.stringify(solicitudesAdopcion));
-        
+        guardarDatos();
         mostrarMensaje('¡Tu solicitud ha sido enviada!');
-        modal.style.display = 'none';
+        modalAdopcion.style.display = 'none';
         formSolicitud.reset();
-        verSolicitudesAdopcion();
+        renderizarAdminPanels();
     });
 
+    // --- Inicialización al cargar la página ---
     renderizarGaleria();
 });

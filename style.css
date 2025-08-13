@@ -7,58 +7,90 @@
 --color-header: #4a3528; (Marrón oscuro neutro)
 */
 
-/* Quita bordes y scroll lateral */
-html, body {
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-  font-family: 'Poppins', sans-serif;
-  background-color: var(--color-fondo);
-}
-
 :root {
-  --color-principal: #5e3c2e;
-  --color-secundario: #c6a484;
-  --color-fondo: #f3e8dd;
-  --color-acento: #d9b08c;
-  --color-texto: #333;
-  --color-header: #4a3528;
+    --color-principal: #5e3c2e;
+    --color-secundario: #c6a484;
+    --color-fondo: #f3e8dd;
+    --color-acento: #d9b08c;
+    --color-texto: #333;
+    --color-header: #4a3528;
 }
 
-/* Header */
+/* Estilos globales y reseteo */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    overflow-x: hidden;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--color-fondo);
+    line-height: 1.6;
+    scroll-behavior: smooth;
+}
+
+section {
+    padding: 60px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--color-principal);
+}
+
+/* Header y Navegación */
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 40px;
-  background-color: #4A3528; /* Café oscuro elegante */
-  color: white;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background-color: var(--color-header);
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
+
 .logo {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 700;
-  font-size: 1.5rem;
-  letter-spacing: 1px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    letter-spacing: 1px;
 }
+
+.logo a {
+    color: white;
+    text-decoration: none;
+}
+
 .nav {
-  display: flex;
+    display: flex;
+    transition: transform 0.3s ease-in-out;
 }
+
 .nav a {
-  color: white;
-  text-decoration: none;
-  margin-left: 25px;
-  font-weight: 600;
-  transition: color 0.3s ease;
+    color: white;
+    text-decoration: none;
+    margin-left: 25px;
+    font-weight: 600;
+    transition: color 0.3s ease;
 }
+
 .nav a:hover {
-  color: var(--color-acento);
+    color: var(--color-acento);
 }
+
 .nav-toggle {
-    display: none; /* Ocultar en desktop */
+    display: none;
     background: none;
     border: none;
     color: white;
@@ -66,657 +98,597 @@ html, body {
     cursor: pointer;
 }
 
-/* Banner de Video */
+/* Video Banner */
 .video-banner {
-  width: 100vw;
-  height: 55vh;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-bottom: 1px solid #333; /* Borde sutil al final del video */
+    width: 100vw;
+    height: 60vh;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
-.video-banner .video-fondo {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  min-width: 100%;
-  min-height: 100%;
-  width: auto;
-  height: auto;
-  z-index: 0;
-  transform: translateX(-50%) translateY(-50%);
-  background-size: cover;
+
+.video-fondo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: 0;
+    transform: translateX(-50%) translateY(-50%);
+    background-size: cover;
 }
+
 .banner-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(74, 53, 40, 0.55); /* Filtro café oscuro elegante */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  color: white;
-  padding: 0 20px;
-  z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(74, 53, 40, 0.55);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    padding: 0 20px;
+    z-index: 1;
 }
+
 .banner-titulo {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 700;
-  font-size: 3.2rem;
-  margin-bottom: 10px;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 3.2rem;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
+
 .banner-subtitulo {
-  font-size: 1.2rem;
-  font-weight: 300;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    font-size: 1.2rem;
+    font-weight: 300;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 }
 
 /* Sección "¿Qué hacemos?" */
 .que-hacemos {
-  padding: 60px 20px;
-  background-color: var(--color-fondo);
-  display: flex;
-  justify-content: center;
-}
-.contenedor-hacemos {
-  max-width: 950px;
-  width: 100%;
-  background-color: var(--color-secundario);
-  color: white;
-  border-radius: 15px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-  padding: 50px 40px;
-  animation: slideFade 1s ease forwards;
-  transition: transform 0.5s ease-out;
-}
-.contenedor-hacemos:hover {
-  transform: translateY(-5px);
-}
-.contenido-hacemos {
-  text-align: center;
-  margin-bottom: 30px;
-}
-.contenido-hacemos h2 {
-  font-size: 2.5rem;
-  margin-bottom: 15px;
-  font-weight: 700;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-}
-.contenido-hacemos p {
-  font-size: 18px;
-  line-height: 1.6;
-}
-.mapa-hacemos {
-  margin-top: 30px;
-  border-radius: 10px;
-  overflow: hidden;
-  transition: box-shadow 0.3s ease;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.15); /* Sombra inicial sutil */
-}
-.mapa-hacemos:hover {
-  box-shadow: 0 8px 25px rgba(0,0,0,0.25); /* Sombra más fuerte al pasar el mouse */
-}
-.mapa-hacemos iframe {
-  transition: transform 0.3s ease;
-}
-.mapa-hacemos:hover iframe {
-  transform: scale(1.02);
+    background-color: var(--color-fondo);
 }
 
+.contenedor-hacemos {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    max-width: 950px;
+    margin: 0 auto;
+    background-color: var(--color-secundario);
+    color: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    padding: 50px 40px;
+}
+
+.contenido-hacemos {
+    flex: 1;
+    min-width: 300px;
+    text-align: center;
+}
+
+.contenido-hacemos h2 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    font-weight: 700;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.contenido-hacemos p {
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+.mapa-hacemos {
+    flex: 1;
+    min-width: 300px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
 
 /* Sección "Cómo puedes ayudar" */
 .explicacion-ayuda {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 40px 20px;
+    background-color: var(--color-fondo);
 }
+
 .ovalo-contenido {
-  background-color: white;
-  border-radius: 30px;
-  display: flex;
-  align-items: center;
-  max-width: 900px;
-  width: 100%;
-  padding: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  gap: 20px;
-  transition: transform 0.3s ease;
+    background-color: white;
+    border-radius: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    gap: 30px;
 }
-.ovalo-contenido:hover {
-  transform: translateY(-3px);
-}
+
 .img-ayuda {
-  width: 150px;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 3px solid var(--color-principal);
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid var(--color-principal);
+    flex-shrink: 0;
 }
+
 .texto-ayuda {
-  font-size: 1rem;
-  color: var(--color-texto);
+    flex-grow: 1;
+    font-size: 1rem;
+    color: var(--color-texto);
 }
 
 /* Sección Carrusel */
 .carrusel-section {
-  background-color: var(--color-secundario);
-  padding: 40px 20px;
-  color: white;
-  text-align: center;
+    background-color: var(--color-secundario);
+    color: white;
+    text-align: center;
 }
-.carrusel-titulo {
-  font-size: 1.8rem;
-  margin-bottom: 20px;
-}
+
 .carrusel-contenedor {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 50px;
 }
+
 .carrusel {
-  display: flex;
-  overflow-x: auto;
-  gap: 15px;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    gap: 20px;
+    padding: 10px 0;
+    scrollbar-width: none;
 }
+
 .carrusel::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
+
 .item {
-  flex: 0 0 auto;
-  width: 220px;
-  background-color: white;
-  border-radius: 10px;
-  color: var(--color-principal);
-  font-weight: bold;
-  transition: transform 0.3s;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    flex: 0 0 300px;
+    scroll-snap-align: start;
+    background-color: white;
+    border-radius: 10px;
+    color: var(--color-principal);
+    font-weight: bold;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
-.item:hover {
-  transform: translateY(-3px);
-}
+
 .item img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 10px 10px 0 0;
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px 10px 0 0;
 }
+
 .item p {
-  padding: 10px;
-  font-size: 14px;
+    padding: 15px;
+    font-size: 16px;
+    line-height: 1.4;
 }
+
 .carrusel-btn {
-  background-color: rgba(255, 255, 255, 0.7);
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 50%;
-  margin: 0 8px;
-  transition: background 0.3s;
+    background-color: rgba(255, 255, 255, 0.7);
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 500;
 }
-.carrusel-btn:hover {
-  background-color: white;
+
+.carrusel-btn.izquierda {
+    left: 10px;
+}
+
+.carrusel-btn.derecha {
+    right: 10px;
 }
 
 /* Sección Adopción */
 .adopcion-section {
-  background-color: var(--color-fondo);
-  padding: 60px 20px;
-  text-align: center;
+    background-color: var(--color-fondo);
 }
-.adopcion-titulo {
-  font-size: 2rem;
-  margin-bottom: 30px;
-  color: var(--color-principal);
-}
+
 .contenedor-adopcion {
-  max-width: 900px;
-  margin: auto;
-  border-radius: 15px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-  padding: 30px;
-  background-color: white;
-  border: 2px solid var(--color-principal);
+    background-color: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
 }
+
+.adopcion-titulo {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: var(--color-principal);
+}
+
 .filtro-adopcion {
-  margin-bottom: 20px;
+    margin-bottom: 30px;
+    text-align: center;
 }
+
 .filtro-adopcion button {
-  background-color: var(--color-secundario);
-  border: none;
-  padding: 8px 16px;
-  margin: 0 8px;
-  border-radius: 15px;
-  cursor: pointer;
-  font-weight: bold;
-  color: white;
-  transition: background 0.3s;
-  font-size: 0.9rem;
+    background-color: var(--color-secundario);
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    color: white;
+    transition: background 0.3s;
+    font-size: 1rem;
 }
-.filtro-adopcion button:hover {
-  background-color: var(--color-principal);
+
+.filtro-adopcion button:hover,
+.filtro-adopcion button.active {
+    background-color: var(--color-principal);
 }
-#lista-publica {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  justify-content: center;
-  padding: 15px;
+
+.galeria {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
 }
+
 .animal-card {
-  background-color: #ffffff;
-  border-radius: 15px;
-  box-shadow: 0 2px 6px rgba(120, 90, 40, 0.1);
-  padding: 12px;
-  width: 200px;
-  transition: transform 0.3s ease;
-  text-align: center;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 2px 6px rgba(120, 90, 40, 0.1);
+    width: 250px;
+    padding: 15px;
+    transition: transform 0.3s ease;
+    text-align: center;
 }
+
 .animal-card:hover {
-  transform: scale(1.03);
+    transform: translateY(-5px);
 }
+
 .animal-card img {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 10px;
-  margin-bottom: 8px;
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 10px;
 }
+
 .animal-card h3 {
-  margin: 5px 0;
-  color: var(--color-principal);
-  font-size: 1rem;
+    margin: 5px 0;
+    color: var(--color-principal);
+    font-size: 1.2rem;
 }
+
 .animal-card p {
-  font-size: 12px;
-  color: var(--color-texto);
+    font-size: 0.9rem;
+    color: var(--color-texto);
+    margin-bottom: 10px;
 }
+
 .animal-card button {
-  margin-top: 8px;
-  padding: 6px 10px;
-  background-color: var(--color-principal);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.8rem;
+    padding: 8px 15px;
+    background-color: var(--color-principal);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: bold;
 }
+
 .animal-card button:hover {
-  background-color: var(--color-secundario);
+    background-color: var(--color-secundario);
 }
 
 /* Sección Formulario de Reporte */
 .reporte-container {
-  background-color: var(--color-secundario); 
-  padding: 60px 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    background-color: var(--color-secundario); 
 }
 
 .formulario-reporte {
-  background-color: white;
-  padding: 1.5rem;
-  border-radius: 15px;
-  max-width: 400px;
-  width: 100%;
-  border: 1px solid var(--color-acento); /* Borde sutil como el que pediste */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  animation: aparecer 1s ease;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  position: relative;
-  z-index: 1;
+    background-color: white;
+    padding: 40px;
+    border-radius: 15px;
+    max-width: 500px;
+    width: 100%;
+    border: 1px solid var(--color-acento);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .formulario-reporte h2 {
-  color: var(--color-principal);
-  font-size: 1.6rem;
-  text-align: center;
-  margin-bottom: 15px;
+    color: var(--color-principal);
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 15px;
 }
+
 .formulario-reporte input,
 .formulario-reporte select,
 .formulario-reporte textarea {
-  width: 100%;
-  padding: 0.6rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  background-color: #fff;
-  transition: border-color 0.3s, box-shadow 0.3s;
-}
-.formulario-reporte input:focus,
-.formulario-reporte select:focus,
-.formulario-reporte textarea:focus {
-  outline: none;
-  border-color: var(--color-principal);
-  box-shadow: 0 0 5px rgba(121, 85, 72, 0.5);
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #fff;
 }
 
-/* Estilos del botón de envío */
 .formulario-reporte button {
-  background-color: var(--color-principal);
-  color: white;
-  padding: 0.8rem 1.2rem;
-  border: none;
-  border-radius: 8px;
-  width: 100%;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-size: 1rem;
-  font-weight: bold;
-  letter-spacing: 0.5px;
-}
-.formulario-reporte button:hover {
-  background-color: var(--color-secundario);
+    background-color: var(--color-principal);
+    color: white;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 8px;
+    width: 100%;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
 }
 
-/* Mensaje Flotante */
-#mensaje-flotante {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px 15px;
-  border-radius: 8px;
-  z-index: 1000;
-  display: none;
-  opacity: 1;
-  transition: opacity 0.5s ease;
-  box-shadow: 1px 1px 5px rgba(0,0,0,0.2);
-}
-#mensaje-flotante.oculto {
-  opacity: 0;
+.formulario-reporte button:hover {
+    background-color: var(--color-secundario);
 }
 
 /* Modal de Adopción */
 .modal {
-  display: none;
-  position: fixed;
-  z-index: 9999;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  justify-content: center;
-  align-items: center;
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
 }
+
 .modal-contenido {
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 10px;
-  max-width: 400px;
-  width: 90%;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  position: relative;
-  color: var(--color-texto);
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+    color: var(--color-texto);
+    text-align: center;
 }
+
 .cerrar-btn {
-  color: #aaa;
-  position: absolute;
-  top: 5px;
-  right: 10px;
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
 }
+
 .cerrar-btn:hover {
-  color: #000;
+    color: #000;
 }
+
 #formSolicitud label {
-  display: block;
-  margin-top: 10px;
-  font-weight: 600;
-  font-size: 0.9rem;
+    display: block;
+    text-align: left;
+    margin-top: 10px;
+    font-weight: 600;
 }
+
 #formSolicitud input, #formSolicitud button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  font-size: 0.9rem;
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
 }
+
 #formSolicitud button {
-  background-color: #6a994e;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.3s ease;
+    background-color: var(--color-principal);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 20px;
 }
+
 #formSolicitud button:hover {
-  background-color: #4e7734;
+    background-color: var(--color-secundario);
 }
 
-/* Animaciones */
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes zoomIn {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
-}
-@keyframes slideFade {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Mensaje Flotante */
+#mensaje-flotante {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    z-index: 1000;
+    display: none;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.2);
+    font-size: 1rem;
 }
 
-/* Estilos de los paneles de administración (unificados) */
+#mensaje-flotante.exito {
+    background-color: #4CAF50;
+}
+
+#mensaje-flotante.error {
+    background-color: #F44336;
+}
+
+/* Panel de Administración */
 .admin-panel {
-  text-align: center;
-  padding: 30px;
-  background-color: var(--color-fondo);
+    background-color: var(--color-fondo);
 }
+
 .toggle-btn {
-  padding: 12px 25px;
-  background-color: var(--color-secundario);
-  color: white;
-  border: none;
-  border-radius: 30px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-bottom: 20px;
-  transition: background-color 0.3s;
+    padding: 12px 25px;
+    background-color: var(--color-secundario);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 20px;
 }
+
 .toggle-btn:hover {
-  background-color: var(--color-principal);
+    background-color: var(--color-principal);
 }
-/* Nuevo estilo para el texto de acceso restringido */
+
 .acceso-restringido {
     font-size: 0.8rem;
     color: #666;
-    margin-top: 5px;
+    margin-top: -15px;
     font-style: italic;
 }
-.solicitudes-ocultas {
-  display: none;
-}
-.solicitudes-visible {
-  display: block;
-}
+
 #admin-container {
-  max-width: 800px;
-  margin: auto;
-  background-color: white;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-.tab-botones {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-  gap: 10px;
-}
-.tab-btn {
-  padding: 10px 20px;
-  background-color: #e0e0e0;
-  color: var(--color-texto);
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
-  font-weight: 600;
-}
-.tab-btn.active {
-  background-color: var(--color-principal);
-  color: white;
-}
-.oculto {
-  display: none;
-}
-#lista-solicitudes, #lista-adopciones, #lista-aprobados {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-.solicitud-card {
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  text-align: left;
-}
-.solicitud-card h4 {
-  margin-top: 0;
-  color: var(--color-principal);
-  border-bottom: 2px solid #e0e0e0;
-  padding-bottom: 10px;
-}
-.solicitud-card p {
-  margin: 5px 0;
-  color: var(--color-texto);
-}
-.solicitud-card span {
-  font-weight: 600;
-}
-.botones-admin {
-  margin-top: 15px;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.btn-aprobar, .btn-eliminar, .btn-aceptar-adopcion, .btn-rechazar-adopcion {
-  padding: 8px 15px;
-  border: none;
-  border-radius: 5px;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-.btn-aprobar, .btn-aceptar-adopcion {
-  background-color: #4CAF50;
-}
-.btn-aprobar:hover, .btn-aceptar-adopcion:hover {
-  background-color: #45a049;
-}
-.btn-eliminar, .btn-rechazar-adopcion {
-  background-color: #F44336;
-}
-.btn-eliminar:hover, .btn-rechazar-adopcion:hover {
-  background-color: #d32f2f;
+    max-width: 900px;
+    margin: auto;
+    background-color: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: max-height 0.5s ease, opacity 0.5s ease;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
 }
 
-/* Media Queries para diseño responsivo */
-@media (max-width: 768px) {
-    .header {
-        padding: 15px 20px;
-    }
-    .nav {
-        display: none;
-        flex-direction: column;
-        position: absolute;
-        top: 60px;
-        left: 0;
-        width: 100%;
-        background-color: #4A3528;
-        padding-bottom: 10px;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        text-align: center;
-    }
-    .nav.active {
-        display: flex;
-    }
-    .nav a {
-        margin: 10px 0;
-        padding: 10px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    .nav-toggle {
-        display: block;
-    }
-    .banner-titulo {
-        font-size: 2.2rem;
-    }
-    .banner-subtitulo {
-        font-size: 1rem;
-    }
-    .contenedor-hacemos {
-        padding: 30px 20px;
-    }
-    .contenido-hacemos h2 {
-        font-size: 2rem;
-    }
-    .explicacion-ayuda .ovalo-contenido {
-        flex-direction: column;
-        text-align: center;
-    }
-    .img-ayuda {
-        width: 100px;
-        height: 100px;
-    }
-    .carrusel-section {
-        padding: 30px 10px;
-    }
-    .carrusel-titulo {
-        font-size: 1.5rem;
-    }
-    .item {
-        width: 180px;
-    }
-    .contenedor-adopcion {
-        padding: 20px;
-    }
-    .filtro-adopcion button {
-        margin-bottom: 10px;
-    }
-    #lista-publica {
-        gap: 10px;
-    }
-    .animal-card {
-        width: 150px;
-    }
-    .formulario-reporte {
-        padding: 1rem;
-    }
+#admin-container.solicitudes-visible {
+    max-height: 2000px;
+    opacity: 1;
 }
-/* Pie de página */
-.footer {
-    background-color: var(--color-header);
+
+.tab-botones {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    padding: 10px 20px;
+    background-color: #e0e0e0;
+    color: var(--color-texto);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    font-weight: 600;
+}
+
+.tab-btn.active {
+    background-color: var(--color-principal);
     color: white;
-    text-align: center;
-    padding: 20px 0;
-    font-size: 0.9rem;
 }
+
+.oculto {
+    display: none;
+}
+
+#lista-reportes-container,
+#lista-adopciones-container,
+#lista-aprobados-container {
+    padding: 10px;
+    border-top: 1px solid #eee;
+}
+
+#lista-solicitudes,
+#lista-adopciones,
+#lista-aprobados {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    justify-content: center;
+}
+
+.solicitud-card {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.solicitud-card h4 {
+    margin-top: 0;
+    color: var(--color-principal);
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 10px;
+}
+
+.solicitud-card p {
+    margin: 5px 0;
+    color: var(--color-texto);
+}
+
+.solicitud-card span {
+    font-weight: 600;
+}
+
+.botones-admin {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.botones-admin button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-aprobar, .btn-aceptar-adopcion {
+    background-color: #4CAF50;
+}
+
+.btn-aprobar:hover, .btn-aceptar-adopcion:hover {
+    background-color: #45a049;
+}
+
+.btn-eliminar, .btn-rechazar-adop
 
 
 
