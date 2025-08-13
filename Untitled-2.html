@@ -1,0 +1,246 @@
+ <!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Adopción</title>
+  <style>
+    /* --- CSS modal y básico --- */
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3e8dd;
+      margin: 0; padding: 20px;
+    }
+    .animal-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 0 10px #ccc;
+      padding: 15px;
+      width: 250px;
+      margin: 10px;
+      display: inline-block;
+      text-align: center;
+    }
+    .animal-card button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #6a994e;
+      border: none;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .animal-card button:hover {
+      background-color: #527a3c;
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none; /* oculto por defecto */
+      justify-content: center; align-items: center;
+      z-index: 9999;
+    }
+    .modal.show {
+      display: flex;
+    }
+    .modal-contenido {
+      background: white;
+      padding: 20px 30px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      position: relative;
+      font-family: 'Poppins', sans-serif;
+    }
+    .cerrar {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #555;
+    }
+    .cerrar:hover {
+      color: #e63946;
+    }
+    form label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+      color: #333;
+    }
+    form input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    form button {
+      margin-top: 20px;
+      background-color: #6a994e;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    form button:hover {
+      background-color: #527a3c;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Animales Disponibles para Adopción</h1>
+
+  <div id="lista-publica">
+    <!-- Aquí se mostrarán las cards -->
+  </div>
+
+  <!-- Modal adopción -->
+  <div id="modal-adopcion" class="modal">
+    <div class="modal-contenido">
+      <span id="cerrar-modal" class="cerrar">&times;</span>
+      <h2>Solicitud de adopción</h2>
+      <form id="formSolicitud">
+        <input type="hidden" id="animalIndex" value="">
+        <label for="nombreSolicitante">Nombre completo*</label>
+        <input type="text" id="nombreSolicitante" required />
+        
+        <label for="emailSolicitante">Correo electrónico*</label>
+        <input type="email" id="emailSolicitante" required />
+        
+        <label for="telefonoSolicitante">Teléfono</label>
+        <input type="tel" id="telefonoSolicitante" />
+        
+        <button type="submit">Enviar solicitud</button>
+      </form>
+    </div>
+  </div>
+
+<script>
+  // Datos de prueba (animales)
+  const animalesPrueba = [
+    { nombre: 'Firulais', tipo: 'Perro', ubicacion: 'Juárez', descripcion: 'Un perro muy amigable.' },
+    { nombre: 'Michi', tipo: 'Gato', ubicacion: 'Chihuahua', descripcion: 'Gatito juguetón.' }
+  ];
+
+  // Guardar animales de prueba en localStorage para demo
+  if (!localStorage.getItem('animales')) {
+    localStorage.setItem('animales', JSON.stringify(animalesPrueba));
+  }
+
+  // Carga y guarda animales
+  function cargarAnimales() {
+    return JSON.parse(localStorage.getItem('animales')) || [];
+  }
+  function guardarSolicitudes(solicitudes) {
+    localStorage.setItem('solicitudesAdopcion', JSON.stringify(solicitudes));
+  }
+  function cargarSolicitudes() {
+    return JSON.parse(localStorage.getItem('solicitudesAdopcion')) || [];
+  }
+
+  // Mostrar animales en la página
+  const listaPublica = document.getElementById('lista-publica');
+  function mostrarPublica() {
+    const animales = cargarAnimales();
+    listaPublica.innerHTML = '';
+    if (animales.length === 0) {
+      listaPublica.innerHTML = '<p>No hay animales disponibles por ahora.</p>';
+      return;
+    }
+    animales.forEach((animal, index) => {
+      const div = document.createElement('div');
+      div.className = 'animal-card';
+      div.innerHTML = `
+        <h3>${animal.nombre}</h3>
+        <p><strong>Tipo:</strong> ${animal.tipo}</p>
+        <p><strong>Ubicación:</strong> ${animal.ubicacion}</p>
+        <p>${animal.descripcion}</p>
+      `;
+      const btn = document.createElement('button');
+      btn.textContent = 'Adoptar';
+      btn.addEventListener('click', () => abrirModalAdopcion(index));
+      div.appendChild(btn);
+      listaPublica.appendChild(div);
+    });
+  }
+
+  // Modal y formulario
+  const modal = document.getElementById('modal-adopcion');
+  const cerrarModalBtn = document.getElementById('cerrar-modal');
+  const formSolicitud = document.getElementById('formSolicitud');
+  let indiceAnimalSeleccionado = null;
+
+  function abrirModalAdopcion(index) {
+    indiceAnimalSeleccionado = index;
+    modal.classList.add('show');
+    document.getElementById('animalIndex').value = index;
+  }
+
+  cerrarModalBtn.addEventListener('click', () => {
+    modal.classList.remove('show');
+    formSolicitud.reset();
+  });
+
+  window.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.classList.remove('show');
+      formSolicitud.reset();
+    }
+  });
+
+  formSolicitud.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const nombre = document.getElementById('nombreSolicitante').value.trim();
+    const email = document.getElementById('emailSolicitante').value.trim();
+    const telefono = document.getElementById('telefonoSolicitante').value.trim();
+    const animalIndex = parseInt(document.getElementById('animalIndex').value);
+
+    if (!nombre || !email) {
+      alert('Por favor completa los campos obligatorios.');
+      return;
+    }
+
+    const animales = cargarAnimales();
+    const animal = animales[animalIndex];
+
+    if (!animal) {
+      alert('Animal no encontrado.');
+      modal.classList.remove('show');
+      return;
+    }
+
+    const solicitudes = cargarSolicitudes();
+    solicitudes.push({
+      nombreSolicitante: nombre,
+      emailSolicitante: email,
+      telefonoSolicitante: telefono,
+      animalSolicitado: animal,
+      fecha: new Date().toISOString(),
+      estado: 'Pendiente'
+    });
+
+    guardarSolicitudes(solicitudes);
+
+    modal.classList.remove('show');
+    formSolicitud.reset();
+    alert('Solicitud enviada. Nos pondremos en contacto contigo pronto.');
+  });
+
+  // Inicializar
+  mostrarPublica();
+</script>
+
+</body>
+</html>

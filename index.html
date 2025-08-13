@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hogar para Patitas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Montserrat:wght@300;700&display=swap" rel="stylesheet" />
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header class="header">
+    <div class="logo">Hogar para Patitas</div>
+    <nav class="nav" id="nav-menu">
+      <a href="#que-hacemos">Qué Hacemos</a>
+      <a href="#adopcion">Adoptar</a>
+      <a href="#reportar">Reportar</a>
+    </nav>
+    <button class="nav-toggle" id="nav-toggle">☰</button>
+  </header>
+
+  <div class="video-banner">
+    <video autoplay muted loop playsinline class="video-fondo">
+      <source src="mi-video.mp4" type="video/mp4">
+      Tu navegador no soporta el tag de video.
+    </video>
+    <div class="banner-overlay">
+      <h1 class="banner-titulo">Un hogar para cada patita</h1>
+      <p class="banner-subtitulo">Ayudando a perritos y gatitos a encontrar una segunda oportunidad</p>
+    </div>
+  </div>
+
+  <section class="que-hacemos" id="que-hacemos" data-aos="fade-up">
+    <div class="contenedor-hacemos">
+      <div class="contenido-hacemos">
+        <h2>¿Qué hacemos?</h2>
+        <p>
+          Nos dedicamos a ayudar a perritos y gatitos cerca del <strong>COBACH 6</strong> en Ciudad Juárez.
+          Buscamos hogares y compartimos casos urgentes en nuestra comunidad estudiantil.
+        </p>
+      </div>
+      <div class="mapa-hacemos" data-aos="zoom-in">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3583.733195505023!2d-106.408!3d31.684!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x86e75fa2f6b6b6b3%3A0x1a8c9f135c23e6b2!2sCOBACH%206!5e0!3m2!1ses!2smx!4v1681234567890"
+          width="100%" height="280" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <section class="explicacion-ayuda" data-aos="fade-left">
+    <div class="ovalo-contenido">
+      <img src="persona-ayudando.jpg" alt="Persona ayudando perritos" class="img-ayuda" />
+      <div class="texto-ayuda">
+        <h3>¿Cómo puedes ayudar?</h3>
+        <p>
+          Si ves un perrito o gatito en la calle, puedes reportarlo en nuestro formulario, o incluso brindarle un
+          hogar temporal mientras buscamos a alguien que lo adopte.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="carrusel-section">
+    <section class="historias-ayuda" data-aos="fade-up" data-aos-duration="1200">
+      <h2 class="carrusel-titulo">Historias de Ayuda</h2>
+      <div class="carrusel-contenedor">
+        <button class="carrusel-btn izquierda" onclick="moverCarrusel(-1)">❮</button>
+        <div class="carrusel" id="carrusel">
+          <div class="item">
+            <img src="perrito1.jpg" alt="Perrito 1" />
+            <p>Rescatado cerca de la Prepa 6</p>
+          </div>
+          <div class="item">
+            <img src="perrito2.jpg" alt="Perrito 2" />
+            <p>Encontrado por estudiantes solidarios</p>
+          </div>
+          <div class="item">
+            <img src="gatito1.jpg" alt="Gatito 1" />
+            <p>Ahora tiene una familia amorosa</p>
+          </div>
+          <div class="item">
+            <img src="Gatito 2.jpg" alt="Gatito 2" />
+            <p>Fue vacunado gracias a voluntarios</p>
+          </div>
+          <div class="item">
+            <img src="perrito3.jpg" alt="Perrito 3" />
+            <p>Adoptado después de 1 semana</p>
+          </div>
+        </div>
+        <button class="carrusel-btn derecha" onclick="moverCarrusel(1)">❯</button>
+      </div>
+    </section>
+  </section>
+
+  <section class="adopcion-section" id="adopcion">
+    <div class="contenedor-adopcion">
+      <h2 class="adopcion-titulo">¡Busca un nuevo amigo!</h2>
+      <div class="filtro-adopcion">
+        <button onclick="filtrarAnimales('todos')">Todos</button>
+        <button onclick="filtrarAnimales('perro')">Solo Perros</button>
+        <button onclick="filtrarAnimales('gato')">Solo Gatos</button>
+      </div>
+      <section class="galeria">
+        <h2>Animales en adopción</h2>
+        <div id="lista-publica"></div>
+      </section>
+    </div>
+  </section>
+
+  <section class="reporte-container" id="reportar" data-aos="fade-up">
+    <form id="formAnimal" class="formulario-reporte">
+      <h2>Reporta un peludito en busca de hogar</h2>
+      <input type="text" id="nombre" name="nombre" placeholder="Nombre del animal" required />
+      <select id="tipo" name="tipo" required>
+        <option value="">Selecciona tipo</option>
+        <option value="perro">Perro</option>
+        <option value="gato">Gato</option>
+      </select>
+      <input type="text" id="ubicacion" name="ubicacion" placeholder="Ubicación" required />
+      <input type="email" id="email" name="email" placeholder="Tu correo electrónico" required />
+      <textarea id="descripcion" name="descripcion" placeholder="Descripción" required></textarea>
+      <input type="file" id="foto" name="foto" accept="image/*" required />
+      <button type="submit">Enviar</button>
+    </form>
+  </section>
+
+  <section class="admin-panel">
+    <button class="toggle-btn" onclick="toggleAdminPanelConContrasena()">Panel de Administración</button>
+    <p class="acceso-restringido">Solo el administrador puede acceder.</p>
+    <div id="admin-container" class="solicitudes-ocultas">
+      <div class="tab-botones">
+        <button onclick="mostrarAdminSeccion('reportes')" class="tab-btn active">Reportes Pendientes</button>
+        <button onclick="mostrarAdminSeccion('adopciones')" class="tab-btn">Solicitudes de Adopción</button>
+        <button onclick="mostrarAdminSeccion('aprobados')" class="tab-btn">Reportes Aprobados</button>
+      </div>
+
+      <div id="lista-reportes-container">
+        <h2>Reportes Pendientes</h2>
+        <div id="lista-solicitudes"></div>
+      </div>
+      
+      <div id="lista-adopciones-container" class="oculto">
+        <h2>Solicitudes de Adopción</h2>
+        <div id="lista-adopciones"></div>
+      </div>
+
+      <div id="lista-aprobados-container" class="oculto">
+        <h2>Reportes Aprobados</h2>
+        <div id="lista-aprobados"></div>
+      </div>
+    </div>
+  </section>
+
+  <div id="modal-adopcion" class="modal">
+    <div class="modal-contenido">
+      <span id="cerrar-modal" class="cerrar-btn">×</span>
+      <h2>Formulario de Adopción para <span id="nombre-animal-modal"></span></h2>
+      <form id="formSolicitud">
+        <input type="hidden" id="animalId" name="animalId" />
+        <label for="nombreSolicitante">Tu nombre completo:</label>
+        <input type="text" id="nombreSolicitante" name="nombreSolicitante" required />
+        <label for="emailSolicitante">Tu correo electrónico:</label>
+        <input type="email" id="emailSolicitante" name="emailSolicitante" required />
+        <label for="telefonoSolicitante">Tu teléfono (opcional):</label>
+        <input type="tel" id="telefonoSolicitante" name="telefonoSolicitante" />
+        <button type="submit">Enviar solicitud</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="mensaje-flotante"></div>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init();
+  </script>
+  <script src="carrusel.js"></script>
+  <footer class="footer">
+    <p>&copy; 2025 Hogar para Patitas. Todos los derechos reservados.</p>
+</footer>
+</body>
+</html>
